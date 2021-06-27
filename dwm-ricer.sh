@@ -22,6 +22,6 @@ makepkg -si
 echo "Installing Dwm of Ashin"
 sudo pacman -S dwm-ashin-git slstatus-ashin-git st-ashin-git dmenu-ashin-git sxiv-ashin-git tabbed-ashin-git slock-ashin-git
 echo "Installing dependencies"
-sudo pacman -S --needed lightdm lightdm-gtk-greeter libx11 kitty xwallpaper sysstat lm_sensors noto-fonts-emoji && paru -S otf-font-awesome-5-free nerd-fonts-jetbrains-mono
+sudo pacman -S --needed lightdm lightdm-gtk-greeter libx11 kitty xwallpaper noto-fonts-emoji && paru -S otf-font-awesome-5-free nerd-fonts-jetbrains-mono
 
 echo "Create a .dwm directory in your home and make a scritp of the things you would like to startup"
