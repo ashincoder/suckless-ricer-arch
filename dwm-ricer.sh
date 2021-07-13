@@ -2,13 +2,8 @@
 
 echo "Requires Internet"
 
-sudo pacman -S --needed git
-
-echo "Adding My custom Repo"
-
-echo "[ashin-repo]" | tee -a /etc/pacman.conf
-echo "SigLevel = Optional DatabaseOptional" | tee -a /etc/pacman.conf
-echo "Server = https://ashincoder.github.io/ashin-repo/x86_64" | tee -a /etc/pacman.conf
+sudo pacman -S --needed xdg-user-dirs git
+xdg-user-dirs-update
 
 echo "Refreshing Database"
 sudo pacman -Sy
@@ -19,9 +14,94 @@ git clone https://aur.archlinux.org/paru-bin.git
 cd paru-bin || exit
 makepkg -si
 
-echo "Installing Dwm of Ashin"
-sudo pacman -S dwm-ashin-git slstatus-ashin-git st-ashin-git dmenu-ashin-git sxiv-ashin-git tabbed-ashin-git slock-ashin-git
 echo "Installing dependencies"
-sudo pacman -S --needed lightdm lightdm-gtk-greeter libx11 kitty xwallpaper noto-fonts-emoji && paru -S otf-font-awesome-5-free nerd-fonts-jetbrains-mono
+sudo pacman -S --needed zsh neovim yarn nodejs npm python3 xclip xf86-video-intel intel-ucode ripgrep fd slop scrot pulseaudio libx11 kitty xwallpaper noto-fonts-emoji
+sleep 5
 
-echo "Create a .dwm directory in your home and make a scritp of the things you would like to startup"
+paru -S nerd-fonts-jetbrains-mono libxft-bgra-git
+echo "Font cache"
+sudo fc-cache -f -v
+
+echo "Setting up directories"
+
+mkdir -p $HOME/.local/bin
+scripts=~/.local/bin/
+
+mkdir -p $HOME/.local/share/dwm
+autostart=~/.local/share/dwm
+
+echo "downloading autostart script"
+
+cd $autostart || exit
+wget https://raw.githubusercontent.com/ashincoder/dotfiles-void/master/.local/share/dwm/autostart.sh
+chmod +x autostart.sh
+cd || exit
+
+echo "Cloning Builds and Scripts"
+cd $scripts || exit
+git clone https://github.com/ashincoder/scripts.git .
+rm -rf .git
+
+config=~/.config/suckless
+mkdir -p $config
+cd $config || exit
+
+echo "Compiling Dwm"
+git clone https://github.com/ashincoder/dwm-ashin.git
+sleep 5
+cd dwm-ashin || exit
+sudo make clean install
+cd ..
+
+echo "Compiling St"
+git clone https://github.com/ashincoder/st-ashin.git
+sleep 5
+cd st-ashin || exit
+sudo make clean install
+cd ..
+
+echo "Compiling Dmenu"
+git clone https://github.com/ashincoder/dmenu-ashin.git
+sleep 5
+cd dmenu-ashin || exit
+sudo make clean install
+cd .. || exit
+
+echo "Compiling Slstatus"
+git clone https://github.com/ashincoder/slstatus-ashin.git
+sleep 5
+cd slstatus-ashin || exit
+sudo make clean install
+cd .. || exit
+
+echo "Compiling Sxiv"
+git clone https://github.com/ashincoder/sxiv-ashin.git
+sleep 5
+cd sxiv-ashin || exit
+sudo make clean install
+cd || exit
+
+echo "Compiling Slock"
+git clone https://github.com/ashincoder/slock-ashin.git
+sleep 5
+cd slock-ashin || exit
+sudo make clean install
+cd ..
+
+echo "Downloading Wallpapers"
+
+sudo mkdir /usr/share/backgrounds
+cd /usr/share/backgrounds/ || exit
+sudo wget https://raw.githubusercontent.com/ashincoder/wallpapers/main/neon.png
+sudo wget https://raw.githubusercontent.com/ashincoder/wallpapers/main/0023.jpg
+sudo mv 0023.jpg nature.jpg
+sleep 5
+
+echo "Setting zsh shell"
+
+cd || exit
+zdot=~/.config/zsh/
+wget https://raw.githubusercontent.com/ashincoder/dotfiles-void/master/.zshenv
+mkdir -p $zdot
+cd $zdot || exit
+chsh $USER
