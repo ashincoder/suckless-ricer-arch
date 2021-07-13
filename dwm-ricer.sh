@@ -105,3 +105,5 @@ wget https://raw.githubusercontent.com/ashincoder/dotfiles-void/master/.zshenv
 mkdir -p $zdot
 cd $zdot || exit
 chsh $USER
+
+echo "zsh-async"
