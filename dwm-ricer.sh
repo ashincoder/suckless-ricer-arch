@@ -8,12 +8,6 @@ xdg-user-dirs-update
 echo "Refreshing Database"
 sudo pacman -Sy
 
-echo "Installing aur helper Paru"
-echo "It is a pre built binary so couple of minutes no worries :)"
-git clone https://aur.archlinux.org/paru-bin.git
-cd paru-bin || exit
-makepkg -si
-
 echo "Installing dependencies"
 sudo pacman -S --needed zsh neovim yarn nodejs npm python3 xclip xf86-video-intel intel-ucode ripgrep fd slop scrot pulseaudio libx11 kitty xwallpaper noto-fonts-emoji
 sleep 5
