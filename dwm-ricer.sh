@@ -4,32 +4,36 @@ echo "Requires Internet"
 
 sudo pacman -S --needed xdg-user-dirs git
 xdg-user-dirs-update
+cd || exit
+
+if command -v aura; then
+	echo "Aura is installed"
+else
+	echo "Aura could not be found"
+	echo "Installing aura"
+	cd || exit
+	git clone https://aur.archlinux.org/aura-bin.git
+	cd aura-bin || exit
+	makepkg -si
+fi
+
+echo "Installing package manager"
 
 echo "Refreshing Database"
-sudo pacman -Sy
+sudo aura -Sy
 
 echo "Installing dependencies"
-sudo pacman -S --needed zsh neovim yarn nodejs npm python3 xclip xf86-video-intel intel-ucode ripgrep fd slop scrot pulseaudio libx11 kitty xwallpaper noto-fonts-emoji
+sudo aura -Sy --needed zsh neovim yarn nodejs npm python3 xclip xf86-video-intel intel-ucode ripgrep fd slop scrot pulseaudio libx11 kitty xwallpaper noto-fonts-emoji
 sleep 5
 
-paru -S nerd-fonts-jetbrains-mono libxft-bgra-git
+aura -Ay nerd-fonts-jetbrains-mono libxft-bgra-git
 echo "Font cache"
 sudo fc-cache -f -v
 
 echo "Setting up directories"
 
-mkdir -p $HOME/.local/bin
+mkdir -p "$HOME"/.local/bin
 scripts=~/.local/bin/
-
-mkdir -p $HOME/.local/share/dwm
-autostart=~/.local/share/dwm
-
-echo "downloading autostart script"
-
-cd $autostart || exit
-wget https://raw.githubusercontent.com/ashincoder/dotfiles-void/master/.local/share/dwm/autostart.sh
-chmod +x autostart.sh
-cd || exit
 
 echo "Cloning Builds and Scripts"
 cd $scripts || exit
@@ -82,22 +86,11 @@ cd slock-ashin || exit
 sudo make clean install
 cd ..
 
-echo "Downloading Wallpapers"
-
-sudo mkdir /usr/share/backgrounds
-cd /usr/share/backgrounds/ || exit
-sudo wget https://raw.githubusercontent.com/ashincoder/wallpapers/main/neon.png
-sudo wget https://raw.githubusercontent.com/ashincoder/wallpapers/main/0023.jpg
-sudo mv 0023.jpg nature.jpg
-sleep 5
-
-echo "Setting zsh shell"
+echo "Cloning dotfiles and Wallpapers"
 
 cd || exit
-zdot=~/.config/zsh/
-wget https://raw.githubusercontent.com/ashincoder/dotfiles-void/master/.zshenv
-mkdir -p $zdot
-cd $zdot || exit
-chsh $USER
-
-echo "zsh-async"
+git clone https://github.com/ashincoder/dots.git
+cd dots || exit
+echo "Symlinking configs"
+stow /*
+chsh "$USER"
