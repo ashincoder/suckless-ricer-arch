@@ -1,10 +1,7 @@
 #!/bin/sh
 
 echo "Requires Internet"
-
-sudo pacman -S --needed xdg-user-dirs git
-xdg-user-dirs-update
-cd || exit
+cd "$HOME" || exit
 
 if command -v aura; then
 	echo "Aura is installed"
@@ -15,6 +12,7 @@ else
 	git clone https://aur.archlinux.org/aura-bin.git
 	cd aura-bin || exit
 	makepkg -si
+	rm -rf aura-bin
 fi
 
 echo "Installing package manager"
@@ -23,10 +21,10 @@ echo "Refreshing Database"
 sudo aura -Sy
 
 echo "Installing dependencies"
-sudo aura -Sy --needed zsh neovim yarn nodejs npm python3 xclip xf86-video-intel intel-ucode ripgrep fd slop scrot pulseaudio libx11 kitty xwallpaper noto-fonts-emoji
+sudo aura -Sy --needed zsh stow neovim yarn nodejs npm python3 xclip ripgrep fd slop scrot pulseaudio libx11 xwallpaper noto-fonts-emoji
 sleep 5
 
-aura -Ay nerd-fonts-jetbrains-mono libxft-bgra-git
+aura -Ay nerd-fonts-jetbrains-mono libxft-bgra-git shellcheck-bin pandoc-bin otf-font-awesome-5-free
 echo "Font cache"
 sudo fc-cache -f -v
 
@@ -88,7 +86,7 @@ cd ..
 
 echo "Cloning dotfiles and Wallpapers"
 
-cd || exit
+cd "$HOME" || exit
 git clone https://github.com/ashincoder/dots.git
 cd dots || exit
 echo "Symlinking configs"
